@@ -13,7 +13,7 @@ const PORT = process.env.PORT;
 const corsOptions = {
   origin: 'http://localhost:4200',
   optionsSuccessStatus: 200
-}
+} 
 
 expressApp.use(morgan('combined'));
 expressApp.use(bodyParser.json());
