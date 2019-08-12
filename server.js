@@ -6,12 +6,18 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const expressApp = express();
 const PORT = process.env.PORT;
+const corsOptions = {
+  origin: 'http://localhost:4200',
+  optionsSuccessStatus: 200
+}
 
 expressApp.use(morgan('combined'));
 expressApp.use(bodyParser.json());
+expressApp.use(cors(corsOptions));
 
 expressApp.use(require('./routes'));
 

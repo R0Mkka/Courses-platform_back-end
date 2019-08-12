@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+const roles = ['Admin', 'Teacher', 'Student'];
+
 const userScheme = new Schema({
   firstName: {
     type: String,
@@ -19,14 +21,12 @@ const userScheme = new Schema({
   },
   password: {
     type: String,
-    required: true,
-    minlength: 4,
-    maxlength: 30
+    required: true
   },
   role: {
     type: String,
     required: true,
-    enum: ['Admin', 'Teacher', 'Student']
+    enum: roles
   }
 }, { versionKey: false });
 
