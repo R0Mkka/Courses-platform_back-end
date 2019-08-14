@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
+const jwt = require('jsonwebtoken');
 const { Schema } = mongoose;
 
 const roles = ['Admin', 'Teacher', 'Student'];
 
-const userScheme = new Schema({
+const userSchema = new Schema({
   firstName: {
     type: String,
     required: true,
@@ -30,6 +31,21 @@ const userScheme = new Schema({
   }
 }, { versionKey: false });
 
-const User = mongoose.model('User', userScheme);
+userSchema.methods.generateJWT = function() {
+  const expiry = new Date();
+
+  expiry.setDate(expiry.getDate() + 7);
+
+  return jwt.sign({
+    _id: this._id,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    email: this.email,
+    role: this.role,
+    exp: parseInt(expiry.getTime() / 1000)
+  }, process.env.SECRET);
+}
+
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
