@@ -52,6 +52,8 @@ usersRouter.post('/register', (req, res) => {
       newUser.email = email;
       newUser.password = hashedPassword;
       newUser.role = role;
+      newUser.courses = [];
+      newUser.registrationDate = new Date();
 
       newUser.save((error) => {
         if (error) return console.error(error);
