@@ -20,7 +20,7 @@ const corsOptions = {
 initPassport(passport);
 
 expressApp.use(morgan('combined'));
-expressApp.use(bodyParser.json());
+expressApp.use(bodyParser.json({ limit: '5mb' }));
 expressApp.use(cors(corsOptions));
 
 expressApp.use(require('./routes'));

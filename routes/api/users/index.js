@@ -3,6 +3,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const jwt = require('express-jwt');
 
+const Image = require('../../../models/image.model');
 const User = require('../../../models/user.model');
 const { errors } = require('./users.config');
 
@@ -82,13 +83,58 @@ usersRouter.post('/login', (req, res) => {
 });
 
 // TODO: PUT: Edit existing user
-usersRouter.put('/edit/:id', (req, res) => {
-  res.send({ error: 'Not implemented yet.' });
+usersRouter.put('/edit/:id', jwt({ secret: process.env.SECRET }), (req, res) => {
+  const id = req.params.id;
+  const newUser = req.body;
+
+  console.log(newUser);
+
+  if (!!id && !!newUser) {
+    return User.findOneAndUpdate(
+      { _id: id },
+      { $set: { ...newUser } },
+      { new: true },
+      (error, changedUser) => {
+        if (error) return console.error(error);
+  
+        res.status(200).send(changedUser);
+      });
+  }
+
+  res.send(200).send({ error: 'Not found' });
 });
 
-// TODO: DELETE: Edit existing user
+// TODO: DELETE: Delete existing user
 usersRouter.delete('/delete/:id', (req, res) => {
   res.send({ error: 'Not implemented yet.' });
 });
+
+usersRouter.get(
+  '/kek',
+  (req, res) => {
+    Image.find({}, (error, images) => {
+      res.status(200).send(images);
+    });
+  }
+);
+
+usersRouter.post(
+  '/kek',
+  (req, res) => {
+    for (const prop of Object.keys(req.body)) {
+      console.log(prop);
+    }
+
+    const image = new Image();
+
+    image.name = req.body.name;
+    image.content = req.body.content;
+    image.type = req.body.type;
+
+    image.save();
+
+    res.send({ kek: 'kek' });
+  }
+);
 
 module.exports = usersRouter;
